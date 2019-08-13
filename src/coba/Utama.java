@@ -1,0 +1,498 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package coba;
+
+
+import java.io.*;
+import javax.swing.DefaultListModel;
+import java.util.ArrayList;
+import javax.swing.UIManager;
+/**
+ *
+ * @author Sept
+ */
+public class Utama extends javax.swing.JFrame {
+    Playlist pl = new Playlist();
+    String selected = "hy";
+    ArrayList updateList = new ArrayList();
+    
+    javazoom.jl.player.Player player;
+    File simpan;
+    /**
+     * Creates new form Utama
+     */
+    public Utama() {
+        initComponents();
+        
+    }
+
+    
+    
+void updateList(){
+    updateList = pl.getListSong();
+    DefaultListModel model = new DefaultListModel();
+    for(int i = 0; i<updateList.size();i++){
+        //int j = i+1;
+        model.add(i,((File) updateList.get(i)).getName());   
+    }
+    jPlaylist.setModel(model);
+}
+//panel kontrol
+
+void add(){
+    pl.add(this);
+    updateList();
+    
+}
+
+void remove(){
+    try{
+        int akandihapus = jPlaylist.getLeadSelectionIndex();
+        pl.ls.remove(akandihapus);
+        updateList();
+    }
+    catch(Exception e){
+    }
+}
+
+void up(){
+    try{
+        int s1 = jPlaylist.getLeadSelectionIndex();
+        simpan = (File) pl.ls.get(s1);
+        pl.ls.remove(s1);
+        pl.ls.add(s1-1,simpan);
+        updateList();
+        jPlaylist.setSelectedIndex(s1-1);
+    }
+    catch(Exception e){
+    }
+}
+
+void down(){
+    try{
+        int s1 = jPlaylist.getLeadSelectionIndex();
+        simpan = (File) pl.ls.get(s1);
+        pl.ls.remove(s1);
+        pl.ls.add(s1+1,simpan);
+        updateList();
+        jPlaylist.setSelectedIndex(s1+1);
+    }
+    catch(Exception e){
+    }
+}
+
+void open(){
+    pl.openPls(this);
+    updateList();
+}
+
+void save(){
+    pl.saveAsPlaylist(this);
+    updateList();
+}
+
+File play1;
+static int a = 0;
+
+void putar(){
+        if(a==0){
+        try{
+            int p1 = jPlaylist.getSelectedIndex();
+            play1 = (File) this.updateList.get(p1);
+            FileInputStream fis = new FileInputStream(play1);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            player = new javazoom.jl.player.Player(bis);
+            a = 1;
+            selected = jPlaylist.getSelectedValue();
+            halo.setText(selected);
+        }catch(Exception e){
+            System.out.println("Problem Playing File");
+            System.out.println(e);
+            
+        }
+        
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    player.play();
+                }catch(Exception e){
+                }
+            }
+        }.start();
+    }else{
+        player.close();
+        a=0;
+        putar();
+    }
+}
+
+File sa;
+void next(){
+    if(a==0){
+        try{
+            int s1 = jPlaylist.getSelectedIndex() +1;
+            sa = (File) this.updateList.get(s1);
+            FileInputStream fis = new FileInputStream(sa);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            player = new javazoom.jl.player.Player(bis);
+            a = 1;
+            jPlaylist.setSelectedIndex(s1);
+            selected = jPlaylist.getSelectedValue();
+            halo.setText(selected);
+        }catch(Exception e){
+            System.out.println("Problem Playing File");
+            System.out.println(e);
+            
+        }
+        
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    player.play();
+                }catch(Exception e){
+                }
+            }
+        }.start();
+    }else{
+        player.close();
+        a=0;
+        next();
+    }
+}
+
+void prev(){
+    if(a==0){
+        try{
+            int s1 = jPlaylist.getSelectedIndex() -1;
+            sa = (File) this.updateList.get(s1);
+            FileInputStream fis = new FileInputStream(sa);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            player = new javazoom.jl.player.Player(bis);
+            a = 1;
+            jPlaylist.setSelectedIndex(s1);
+            selected = jPlaylist.getSelectedValue();
+            halo.setText(selected);
+        }catch(Exception e){
+            System.out.println("Problem Playing File");
+            System.out.println(e);
+            
+        }
+        
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    player.play();
+                }catch(Exception e){
+                }
+            }
+        }.start();
+    }else{
+        player.close();
+        a=0;
+        prev();
+    }
+}
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        btn_add = new javax.swing.JButton();
+        btn_remove = new javax.swing.JButton();
+        btn_up = new javax.swing.JButton();
+        btn_open = new javax.swing.JButton();
+        btn_down = new javax.swing.JButton();
+        btn_save = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPlaylist = new javax.swing.JList<>();
+        btn_pause = new javax.swing.JButton();
+        btn_prev = new javax.swing.JButton();
+        btn_next = new javax.swing.JButton();
+        btn_play = new javax.swing.JButton();
+        btn_stop = new javax.swing.JButton();
+        halo = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        artis = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btn_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/002-plus.png"))); // NOI18N
+        btn_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addActionPerformed(evt);
+            }
+        });
+
+        btn_remove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/001-clean.png"))); // NOI18N
+        btn_remove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_removeActionPerformed(evt);
+            }
+        });
+
+        btn_up.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/003-upload.png"))); // NOI18N
+        btn_up.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_upActionPerformed(evt);
+            }
+        });
+
+        btn_open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/005-folder.png"))); // NOI18N
+        btn_open.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_openActionPerformed(evt);
+            }
+        });
+
+        btn_down.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/004-download.png"))); // NOI18N
+        btn_down.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_downActionPerformed(evt);
+            }
+        });
+
+        btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/006-download-1.png"))); // NOI18N
+        btn_save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_saveActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(jPlaylist);
+
+        btn_pause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/007-pause.png"))); // NOI18N
+        btn_pause.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_pauseActionPerformed(evt);
+            }
+        });
+
+        btn_prev.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/010-back.png"))); // NOI18N
+        btn_prev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_prevActionPerformed(evt);
+            }
+        });
+
+        btn_next.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/011-next.png"))); // NOI18N
+        btn_next.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_nextActionPerformed(evt);
+            }
+        });
+
+        btn_play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/008-play.png"))); // NOI18N
+        btn_play.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_playActionPerformed(evt);
+            }
+        });
+
+        btn_stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coba/resource/009-stop.png"))); // NOI18N
+        btn_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_stopActionPerformed(evt);
+            }
+        });
+
+        halo.setText(selected);
+
+        artis.setText("k");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_remove, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_up, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_down, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_open, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(artis, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(halo, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(134, 134, 134)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(btn_pause, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btn_prev, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btn_play)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btn_stop, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30))
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(204, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(86, 86, 86))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_next, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_pause, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btn_prev, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btn_play, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_stop, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_open)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_save))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_add)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_remove))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_up)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_down)))
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(73, 73, 73)
+                        .addComponent(halo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(artis, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
+        add();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_addActionPerformed
+
+    private void btn_playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_playActionPerformed
+        putar();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_playActionPerformed
+
+    private void btn_pauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pauseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_pauseActionPerformed
+
+    private void btn_removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_removeActionPerformed
+        remove();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_removeActionPerformed
+
+    private void btn_upActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_upActionPerformed
+        up();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_upActionPerformed
+
+    private void btn_downActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_downActionPerformed
+        down();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_downActionPerformed
+
+    private void btn_openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_openActionPerformed
+        open();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_openActionPerformed
+
+    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
+        save();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_saveActionPerformed
+
+    private void btn_prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prevActionPerformed
+        prev();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_prevActionPerformed
+
+    private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nextActionPerformed
+        next();        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_nextActionPerformed
+
+    private void btn_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopActionPerformed
+        player.close();       // TODO add your handling code here:
+    }//GEN-LAST:event_btn_stopActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Utama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Utama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Utama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Utama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Utama().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel artis;
+    private javax.swing.JButton btn_add;
+    private javax.swing.JButton btn_down;
+    private javax.swing.JButton btn_next;
+    private javax.swing.JButton btn_open;
+    private javax.swing.JButton btn_pause;
+    private javax.swing.JButton btn_play;
+    private javax.swing.JButton btn_prev;
+    private javax.swing.JButton btn_remove;
+    private javax.swing.JButton btn_save;
+    private javax.swing.JButton btn_stop;
+    private javax.swing.JButton btn_up;
+    private javax.swing.JLabel halo;
+    private javax.swing.JList<String> jPlaylist;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+}
